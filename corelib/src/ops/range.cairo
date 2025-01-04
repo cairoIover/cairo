@@ -102,75 +102,7 @@ impl RangeIntoIterator<
     }
 }
 
-/// Represents the range [start, end].
-#[derive(Clone, Drop)]
-pub struct RangeInclusive<T> {
-    /// The lower bound of the range (inclusive).
-    pub start: T,
-    /// The upper bound of the range (inclusive).
-    pub end: T,
-}
-
-#[derive(Clone, Drop)]
-pub struct RangeInclusiveIterator<T> {
-    /// The current value of the iterator.
-    cur: T,
-    /// The upper bound of the range (inclusive).
-    end: T,
-}
-
-/// Handles the range inclusive operator (`start..=end`).
-#[generate_trait]
-pub impl RangeInclusiveOpImpl<T> of RangeInclusiveOp<T> {
-    /// Handles the `..=` operator. Returns the value of the expression `start..=end`.
-    fn range_inclusive(start: T, end: T) -> RangeInclusive<T> {
-        RangeInclusive { start, end }
-    }
-}
-
-impl RangeInclusiveIteratorImpl<
-    T, impl OneT: One<T>, +Add<T>, +Copy<T>, +Drop<T>, +PartialEq<T>,
-> of Iterator<RangeInclusiveIterator<T>> {
-    type Item = T;
-
-    fn next(ref self: RangeInclusiveIterator<T>) -> Option<T> {
-        if self.cur != self.end {
-            let value = self.cur;
-            self.cur = value + OneT::one();
-            Option::Some(value)
-        } else if self.cur == self.end {
-            let value = self.cur;
-            self.cur = value + OneT::one();
-            Option::Some(value)
-        } else {
-            Option::None
-        }
-    }
-}
-
-pub impl RangeInclusiveIntoIterator<
-    T,
-    impl OneT: One<T>,
-    +Add<T>,
-    +Copy<T>,
-    +Drop<T>,
-    +PartialEq<T>,
-    +PartialOrd<T>,
-    -SierraIntRangeSupport<T>,
-> of IntoIterator<RangeInclusive<T>> {
-    type IntoIter = RangeInclusiveIterator<T>;
-
-    fn into_iter(self: RangeInclusive<T>) -> Self::IntoIter {
-        if self.start <= self.end {
-            Self::IntoIter { cur: self.start, end: self.end }
-        } else {
-            let oob = self.end + OneT::one();
-            Self::IntoIter { cur: oob, end: oob }
-        }
-    }
-}
-
-#[derive(Clone, Drop)]
+#[derive(Clone, Drop, PartialEq)]
 struct RangeToInclusive<T> {
     pub end: T,
 }
@@ -181,6 +113,35 @@ pub impl RangeToInclusiveImpl<T> of RangeToInclusiveOp<T> {
     fn range_to_inclusive(end: T) -> RangeToInclusive<T> {
         RangeToInclusive { end }
     }
+}
+
+/// A range only bounded inclusively above (`..=end`).
+///
+/// The `RangeToInclusive` `..=end` contains all values with `x <= end`.
+/// It cannot serve as an [`Iterator`] because it doesn't have a starting point.
+///
+/// # Examples
+///
+/// The `..=end` syntax is a `RangeToInclusive`:
+///
+/// ```
+/// assert_eq!((..=5), core::ops::RangeToInclusive{ end: 5 });
+/// ```
+///
+/// It does not have an [`IntoIterator`] implementation, so you can't use it in a
+/// `for` loop directly. This won't compile:
+///
+/// ```compile_fail
+/// // error[E0277]: the trait bound `std::ops::RangeToInclusive<{integer}>:
+/// // std::iter::Iterator` is not satisfied
+/// for i in ..=5 {
+///     // ...
+/// }
+/// ```
+#[derive(Clone, Drop)]
+struct RangeToInclusiveIterator<T> {
+    pub(crate) end: T,
+    pub(crate) exhausted: bool,
 }
 
 

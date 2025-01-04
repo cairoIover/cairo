@@ -24,6 +24,6 @@ fn test_range_inclusive_iterator_working() {
 
 #[test]
 fn test_range_to_inclusive() {
-    let x = (..=3_usize);
+    let x = (..= 3_usize);
     assert!(x.end == 3);
 }

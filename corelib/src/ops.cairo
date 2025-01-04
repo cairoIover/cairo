@@ -8,12 +8,9 @@ mod deref;
 pub use deref::DerefMut;
 pub use deref::{Deref, SnapshotDeref};
 mod range;
-// `RangeInclusiveOp` is used internally by the compiler.
 #[allow(unused_imports)]
-use range::RangeInclusiveOp;
-// `RangeOp` is used internally by the compiler.
-#[allow(unused_imports)]
-use range::RangeOp;
+// `RangeOp` are used internally by the compiler.
+use range::{RangeOp, RangeInclusiveOp, RangeToInclusiveOp};
 pub use range::{Range, RangeInclusive, RangeInclusiveIterator, RangeIterator, RangeTrait};
 
 mod function;

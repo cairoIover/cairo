@@ -90,6 +90,7 @@ pub fn get_spec() -> Vec<Node> {
         .node_with_explicit_kind("Minus", "TerminalMinus")
         .node_with_explicit_kind("At", "TerminalAt")
         .node_with_explicit_kind("Desnap", "TerminalMul")
+        .node_with_explicit_kind("DotDotEq", "TerminalDotDotEq")
     )
     .add_struct(StructBuilder::new("ExprBinary")
         .node("lhs", "Expr")

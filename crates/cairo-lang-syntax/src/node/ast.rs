@@ -2232,6 +2232,7 @@ pub enum UnaryOperator {
     Minus(TerminalMinus),
     At(TerminalAt),
     Desnap(TerminalMul),
+    DotDotEq(TerminalDotDotEq),
 }
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct UnaryOperatorPtr(pub SyntaxStablePtrId);
@@ -2274,6 +2275,11 @@ impl From<TerminalMulPtr> for UnaryOperatorPtr {
         Self(value.0)
     }
 }
+impl From<TerminalDotDotEqPtr> for UnaryOperatorPtr {
+    fn from(value: TerminalDotDotEqPtr) -> Self {
+        Self(value.0)
+    }
+}
 impl From<TerminalNotGreen> for UnaryOperatorGreen {
     fn from(value: TerminalNotGreen) -> Self {
         Self(value.0)
@@ -2296,6 +2302,11 @@ impl From<TerminalAtGreen> for UnaryOperatorGreen {
 }
 impl From<TerminalMulGreen> for UnaryOperatorGreen {
     fn from(value: TerminalMulGreen) -> Self {
+        Self(value.0)
+    }
+}
+impl From<TerminalDotDotEqGreen> for UnaryOperatorGreen {
+    fn from(value: TerminalDotDotEqGreen) -> Self {
         Self(value.0)
     }
 }
@@ -2322,6 +2333,9 @@ impl TypedSyntaxNode for UnaryOperator {
             SyntaxKind::TerminalMul => {
                 UnaryOperator::Desnap(TerminalMul::from_syntax_node(db, node))
             }
+            SyntaxKind::TerminalDotDotEq => {
+                UnaryOperator::DotDotEq(TerminalDotDotEq::from_syntax_node(db, node))
+            }
             _ => panic!("Unexpected syntax kind {:?} when constructing {}.", kind, "UnaryOperator"),
         }
     }
@@ -2332,6 +2346,7 @@ impl TypedSyntaxNode for UnaryOperator {
             UnaryOperator::Minus(x) => x.as_syntax_node(),
             UnaryOperator::At(x) => x.as_syntax_node(),
             UnaryOperator::Desnap(x) => x.as_syntax_node(),
+            UnaryOperator::DotDotEq(x) => x.as_syntax_node(),
         }
     }
     fn stable_ptr(&self) -> Self::StablePtr {
@@ -2354,6 +2369,7 @@ impl UnaryOperator {
                 | SyntaxKind::TerminalMinus
                 | SyntaxKind::TerminalAt
                 | SyntaxKind::TerminalMul
+                | SyntaxKind::TerminalDotDotEq
         )
     }
 }

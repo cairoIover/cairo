@@ -119,7 +119,7 @@ pub struct RangeInclusiveIterator<T> {
     end: T,
 }
 
-/// Handles the range inclusive operator (`..=`).
+/// Handles the range inclusive operator (`start..=end`).
 #[generate_trait]
 pub impl RangeInclusiveOpImpl<T> of RangeInclusiveOp<T> {
     /// Handles the `..=` operator. Returns the value of the expression `start..=end`.
@@ -169,6 +169,20 @@ pub impl RangeInclusiveIntoIterator<
         }
     }
 }
+
+#[derive(Clone, Drop)]
+struct RangeToInclusive<T> {
+    pub end: T,
+}
+
+/// Handles the range to inclusive operator (`..=end`).
+#[generate_trait]
+pub impl RangeToInclusiveImpl<T> of RangeToInclusiveOp<T> {
+    fn range_to_inclusive(end: T) -> RangeToInclusive<T> {
+        RangeToInclusive { end }
+    }
+}
+
 
 // Sierra optimization.
 

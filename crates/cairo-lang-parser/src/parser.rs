@@ -1129,6 +1129,7 @@ impl<'a> Parser<'a> {
             SyntaxKind::TerminalBitNot => self.take::<TerminalBitNot>().into(),
             SyntaxKind::TerminalMinus => self.take::<TerminalMinus>().into(),
             SyntaxKind::TerminalMul => self.take::<TerminalMul>().into(),
+            SyntaxKind::TerminalDotDotEq => self.take::<TerminalDotDotEq>().into(),
             _ => unreachable!(),
         }
     }

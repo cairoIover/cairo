@@ -422,17 +422,18 @@ pub fn core_unary_operator(
     unary_op: &UnaryOperator,
     stable_ptr: SyntaxStablePtrId,
 ) -> Maybe<Result<ConcreteTraitGenericFunctionId, SemanticDiagnosticKind>> {
-    let (trait_name, function_name) = match unary_op {
-        UnaryOperator::Minus(_) => ("Neg", "neg"),
-        UnaryOperator::Not(_) => ("Not", "not"),
-        UnaryOperator::BitNot(_) => ("BitNot", "bitnot"),
+    let (trait_name, function_name, context) = match unary_op {
+        UnaryOperator::Minus(_) => ("Neg", "neg", CoreTraitContext::TopLevel),
+        UnaryOperator::Not(_) => ("Not", "not", CoreTraitContext::TopLevel),
+        UnaryOperator::BitNot(_) => ("BitNot", "bitnot", CoreTraitContext::TopLevel),
         UnaryOperator::At(_) => unreachable!("@ is not an unary operator."),
         UnaryOperator::Desnap(_) => unreachable!("* is not an unary operator."),
+        UnaryOperator::DotDotEq(_) => ("RangeToInclusiveOp", "range_to_inclusive", CoreTraitContext::Ops),
     };
     Ok(Ok(get_core_trait_function_infer(
         db,
         inference,
-        CoreTraitContext::TopLevel,
+        context,
         trait_name.into(),
         function_name.into(),
         stable_ptr,

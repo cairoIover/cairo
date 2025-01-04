@@ -21,3 +21,9 @@ fn test_range_inclusive_iterator_working() {
     assert!(iter.next() == Option::Some(3));
     assert!(iter.next() == Option::None);
 }
+
+#[test]
+fn test_range_to_inclusive() {
+    let x = (..=3_usize);
+    assert!(x.end == 3);
+}

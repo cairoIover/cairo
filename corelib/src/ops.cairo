@@ -14,7 +14,7 @@ use range::RangeInclusiveOp;
 // `RangeOp` is used internally by the compiler.
 #[allow(unused_imports)]
 use range::RangeOp;
-pub use range::{Range, RangeIterator, RangeTrait, RangeInclusive, RangeInclusiveIterator};
+pub use range::{Range, RangeInclusive, RangeInclusiveIterator, RangeIterator, RangeTrait};
 
 mod function;
 pub use function::{Fn, FnOnce};

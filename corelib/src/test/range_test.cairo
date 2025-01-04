@@ -1,4 +1,4 @@
-use core::ops::{RangeTrait};
+use core::ops::RangeTrait;
 
 #[test]
 fn test_range_is_empty() {
